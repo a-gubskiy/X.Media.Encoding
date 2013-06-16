@@ -21,6 +21,22 @@ namespace X.Media.Encoding
             FFmpegPath = Path.Combine(directory, "ffmpeg.exe");
             FFmpeg2TheoraPath = Path.Combine(directory, "ffmpeg2theora.exe");
             HandBrakePath = Path.Combine(directory, "HandBrakeCLI.exe");
+
+            if (!File.Exists(FFmpegPath))
+            {
+                File.WriteAllBytes(FFmpegPath, X.Media.Encoding.Properties.Resources.ffmpeg);
+            }
+
+            if (!File.Exists(FFmpeg2TheoraPath))
+            {
+                File.WriteAllBytes(FFmpeg2TheoraPath, X.Media.Encoding.Properties.Resources.ffmpeg2theora);
+            }
+
+            if (!File.Exists(HandBrakePath))
+            {
+                File.WriteAllBytes(HandBrakePath, X.Media.Encoding.Properties.Resources.HandBrakeCLI);
+            }
+            
         }
 
         public bool EncodeVideo(string inputFile, Format format, Quality quality, string outputFile)
