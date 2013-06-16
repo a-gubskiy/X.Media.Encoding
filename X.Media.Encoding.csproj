@@ -111,6 +111,9 @@
     <Content Include="licenses\ffmpeg\opus.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="licenses\ffmpeg\README.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="licenses\ffmpeg\rtmpdump.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
