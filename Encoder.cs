@@ -62,6 +62,12 @@ namespace X.Media.Encoding
                     videoBitRate = "1024k";
                 }
 
+                if (quality == Quality.VeryHigh)
+                {
+                    resolution = "1920x1080";
+                    videoBitRate = "1024k";
+                }
+
                 if (format == Format.Mp4)
                 {
                     if (quality == Quality.Low)
@@ -71,8 +77,7 @@ namespace X.Media.Encoding
                         Outpoot = RunProcess(HandBrakePath, arguments);
                     }
 
-
-                    if (quality == Quality.Medium || quality == Quality.High)
+                    if (quality == Quality.Medium || quality == Quality.High || quality == Quality.VeryHigh)
                     {
                         var arguments = String.Format("-i {0} -ab 128k -ac 2 -vcodec libx264 -s {1} -crf 22 -threads 0 -b {3} -strict experimental  {2}", inputFile, resolution, outputFile, videoBitRate);
                         Outpoot = RunProcess(FFmpegPath, arguments);
