@@ -54,6 +54,7 @@
     <EmbeddedResource Include="ffmpeg.exe" />
     <EmbeddedResource Include="ffmpeg2theora.exe" />
     <EmbeddedResource Include="HandBrakeCLI.exe" />
+    <EmbeddedResource Include="avifil32.dll" />
     <Content Include="licenses\ffmpeg\bzip2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

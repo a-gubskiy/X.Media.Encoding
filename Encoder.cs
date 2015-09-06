@@ -22,24 +22,23 @@ namespace X.Media.Encoding
             FFmpeg2TheoraPath = Path.Combine(directory, "ffmpeg2theora.exe");
             HandBrakePath = Path.Combine(directory, "HandBrakeCLI.exe");
 
-            if (!File.Exists(FFmpegPath))
-            {
-                File.WriteAllBytes(FFmpegPath, X.Media.Encoding.Properties.Resources.ffmpeg);
-            }
+            var avifil32Path = Path.Combine(directory, "avifil32.dll");
 
-            if (!File.Exists(FFmpeg2TheoraPath))
-            {
-                File.WriteAllBytes(FFmpeg2TheoraPath, X.Media.Encoding.Properties.Resources.ffmpeg2theora);
-            }
-
-            if (!File.Exists(HandBrakePath))
-            {
-                File.WriteAllBytes(HandBrakePath, X.Media.Encoding.Properties.Resources.HandBrakeCLI);
-            }
-            
+            CheckFile(FFmpegPath, X.Media.Encoding.Properties.Resources.ffmpeg);
+            CheckFile(FFmpeg2TheoraPath, X.Media.Encoding.Properties.Resources.ffmpeg2theora);
+            CheckFile(HandBrakePath, X.Media.Encoding.Properties.Resources.HandBrakeCLI);
+            CheckFile(avifil32Path, X.Media.Encoding.Properties.Resources.avifil32);
         }
 
-        public bool EncodeVideo(string inputFile, Format format, Quality quality, string outputFile)
+        private static void CheckFile(string path, byte[] file)
+        {
+            if (!File.Exists(path))
+            {
+                File.WriteAllBytes(path, file);
+            }
+        }
+
+        public bool EncodeVideo(String inputFile, Format format, Quality quality, String outputFile, int autodBitRate = 128)
         {
             try
             {
@@ -74,31 +73,33 @@ namespace X.Media.Encoding
                     {
                         var arguments = String.Format("--preset \"{2}\" --turbo --optimize --input {0} --output {1}",
                                                       inputFile, outputFile, "iPhone & iPod Touch");
+
                         Outpoot = RunProcess(HandBrakePath, arguments);
                     }
 
                     if (quality == Quality.Medium || quality == Quality.High || quality == Quality.VeryHigh)
                     {
-                        var arguments = String.Format("-i {0} -ab 128k -ac 2 -vcodec libx264 -s {1} -crf 22 -threads 0 -b {3} -strict experimental  {2}", inputFile, resolution, outputFile, videoBitRate);
+                        var arguments = String.Format("-i {0} -ab {4}k -ac 2 -vcodec libx264 -s {1} -crf 22 -threads 0 -b {3} -strict experimental  {2}",
+                            inputFile, resolution, outputFile, videoBitRate, autodBitRate);
+
                         Outpoot = RunProcess(FFmpegPath, arguments);
                     }
                 }
-
-                if (format == Format.Ogg)
+                else if (format == Format.Ogg)
                 {
-                    var arguments = String.Format("--videoquality 5 --audioquality 1 --max_size {0} {1}", resolution,
-                                                  inputFile);
+                    var arguments = String.Format("--videoquality 5 --audioquality 1 --max_size {0} {1}", resolution, inputFile);
+
                     Outpoot = RunProcess(FFmpeg2TheoraPath, arguments);
 
                     var ogvTempFile = Path.GetDirectoryName(inputFile) + "\\" +
                                       Path.GetFileNameWithoutExtension(inputFile) + ".ogv";
+
                     File.Copy(ogvTempFile, outputFile);
                     File.Delete(ogvTempFile);
                 }
-
-                if (format == Format.Webm)
+                else if (format == Format.Webm)
                 {
-                    var arguments = String.Format("-i {0} -f webm -vcodec libvpx -acodec libvorbis -b {3} -r 25 -s {1} -ar 44100 -ab 128k -ac 2 -y {2}", inputFile, resolution, outputFile, videoBitRate);
+                    var arguments = String.Format("-i {0} -f webm -vcodec libvpx -acodec libvorbis -b {3} -r 25 -s {1} -ar 44100 -ab {4}k -ac 2 -y {2}", inputFile, resolution, outputFile, videoBitRate, autodBitRate);
                     Outpoot = RunProcess(FFmpegPath, arguments);
                 }
             }
@@ -110,21 +111,24 @@ namespace X.Media.Encoding
             return File.Exists(outputFile);
         }
 
-        private static string RunProcess(string executablePath, string parameters)
+        private static string RunProcess(string fileNmae, string arguments)
         {
             //create a process info
-            var processStartInfo = new ProcessStartInfo(executablePath, parameters);
-            processStartInfo.UseShellExecute = false;
-            processStartInfo.CreateNoWindow = false;
-            processStartInfo.RedirectStandardOutput = false;
-            processStartInfo.RedirectStandardError = false;
-
+            var processStartInfo = new ProcessStartInfo
+            {
+                UseShellExecute = false,
+                CreateNoWindow = false,
+                RedirectStandardOutput = false,
+                RedirectStandardError = false,
+                FileName = fileNmae,
+                Arguments = arguments
+            };
 
             //Create the output and streamreader to get the output
             var output = new StringBuilder();
 
             output.AppendFormat("Operation start at: {0} {1}\r\n", DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString());
-            output.AppendFormat("{0} {1}\r\n", executablePath, parameters);
+            output.AppendFormat("{0} {1}\r\n", fileNmae, arguments);
 
             StreamReader outputStreamReader = null;
 
@@ -150,8 +154,9 @@ namespace X.Media.Encoding
 
                     process.WaitForExit();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    output.AppendLine(String.Format("Error: {0}", ex.Message));
                 }
 
                 if (processStartInfo.RedirectStandardOutput)
@@ -186,6 +191,17 @@ namespace X.Media.Encoding
 
 
             return output.ToString();
+        }
+
+        public static string GetFormatExtension(Format format)
+        {
+            switch (format)
+            {
+                case Format.Webm: return ".webm";
+                case Format.Ogg: return ".ogg";
+                case Format.Mp4: return ".mp4";
+                default: throw new Exception("Unknown video fomat");
+            }
         }
     }
 }
