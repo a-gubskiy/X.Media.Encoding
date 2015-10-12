@@ -1,0 +1,7 @@
+language: csharp
+solution: X.Media.Encoding.sln
+sudo: false
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov
