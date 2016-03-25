@@ -79,7 +79,7 @@ namespace X.Media.Encoding
 
                     if (quality == Quality.Medium || quality == Quality.High || quality == Quality.VeryHigh)
                     {
-                        var arguments = String.Format("-i {0} -ab {4}k -ac 2 -vcodec libx264 -s {1} -crf 22 -threads 0 -b {3} -strict experimental  {2}",
+                        var arguments = String.Format("-i {0} -ab {4}k -ac 2 -vcodec libx264 -s {1} -crf 22 -threads 0 -b {3} -strict experimental movflags=+faststart {2}",
                             inputFile, resolution, outputFile, videoBitRate, autodBitRate);
 
                         Outpoot = RunProcess(FFmpegPath, arguments);
