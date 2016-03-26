@@ -11,6 +11,7 @@ namespace X.Media.Encoding
         public string FFmpeg2TheoraPath { get; set; }
         public string FFmpegPath { get; set; }
         public string HandBrakePath { get; set; }
+        public string QtFaststartPath { get; set; }
         public string Outpoot { get; private set; }
 
         public Encoder()
@@ -21,6 +22,7 @@ namespace X.Media.Encoding
             FFmpegPath = Path.Combine(directory, "ffmpeg.exe");
             FFmpeg2TheoraPath = Path.Combine(directory, "ffmpeg2theora.exe");
             HandBrakePath = Path.Combine(directory, "HandBrakeCLI.exe");
+            QtFaststartPath = Path.Combine(directory, "qt-faststart.exe");
 
             var avifil32Path = Path.Combine(directory, "avifil32.dll");
 
@@ -28,6 +30,7 @@ namespace X.Media.Encoding
             CheckFile(FFmpeg2TheoraPath, X.Media.Encoding.Properties.Resources.ffmpeg2theora);
             CheckFile(HandBrakePath, X.Media.Encoding.Properties.Resources.HandBrakeCLI);
             CheckFile(avifil32Path, X.Media.Encoding.Properties.Resources.avifil32);
+            CheckFile(QtFaststartPath, X.Media.Encoding.Properties.Resources.qt_faststart);
         }
 
         private static void CheckFile(string path, byte[] file)

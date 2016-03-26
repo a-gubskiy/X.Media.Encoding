@@ -99,5 +99,15 @@ namespace X.Media.Encoding.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] qt_faststart {
+            get {
+                object obj = ResourceManager.GetObject("qt_faststart", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

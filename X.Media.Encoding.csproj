@@ -51,6 +51,7 @@
     <Compile Include="QuickVideoEncodingCommands.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="qt-faststart.exe" />
     <EmbeddedResource Include="ffmpeg.exe" />
     <EmbeddedResource Include="ffmpeg2theora.exe" />
     <EmbeddedResource Include="HandBrakeCLI.exe" />
