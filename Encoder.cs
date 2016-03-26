@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Text;
 
 namespace X.Media.Encoding
 {
     public class Encoder
     {
-        public string FFmpeg2TheoraPath { get; set; }
-        public string FFmpegPath { get; set; }
-        public string HandBrakePath { get; set; }
-        public string QtFaststartPath { get; set; }
+        public string FFmpeg2TheoraPath { get; private set; }
+        public string FFmpegPath { get; private set; }
+        public string HandBrakePath { get; private set; }
+        public string QtFaststartPath { get; private set; }
+        public string AviFil32Path { get; private set; }
         public string Outpoot { get; private set; }
 
         public Encoder()
@@ -23,22 +22,13 @@ namespace X.Media.Encoding
             FFmpeg2TheoraPath = Path.Combine(directory, "ffmpeg2theora.exe");
             HandBrakePath = Path.Combine(directory, "HandBrakeCLI.exe");
             QtFaststartPath = Path.Combine(directory, "qt-faststart.exe");
-
-            var avifil32Path = Path.Combine(directory, "avifil32.dll");
+            AviFil32Path = Path.Combine(directory, "avifil32.dll");
 
             CheckFile(FFmpegPath, X.Media.Encoding.Properties.Resources.ffmpeg);
             CheckFile(FFmpeg2TheoraPath, X.Media.Encoding.Properties.Resources.ffmpeg2theora);
             CheckFile(HandBrakePath, X.Media.Encoding.Properties.Resources.HandBrakeCLI);
-            CheckFile(avifil32Path, X.Media.Encoding.Properties.Resources.avifil32);
+            CheckFile(AviFil32Path, X.Media.Encoding.Properties.Resources.avifil32);
             CheckFile(QtFaststartPath, X.Media.Encoding.Properties.Resources.qt_faststart);
-        }
-
-        private static void CheckFile(string path, byte[] file)
-        {
-            if (!File.Exists(path))
-            {
-                File.WriteAllBytes(path, file);
-            }
         }
 
         public bool EncodeVideo(String inputFile, Format format, Quality quality, String outputFile, int autodBitRate = 128)
@@ -77,25 +67,29 @@ namespace X.Media.Encoding
                         var arguments = String.Format("--preset \"{2}\" --turbo --optimize --input {0} --output {1}",
                                                       inputFile, outputFile, "iPhone & iPod Touch");
 
-                        Outpoot = RunProcess(HandBrakePath, arguments);
+                        Outpoot = ProcessManager.RunProcess(HandBrakePath, arguments);
                     }
 
                     if (quality == Quality.Medium || quality == Quality.High || quality == Quality.VeryHigh)
                     {
-                        var arguments = String.Format("-i {0} -ab {4}k -ac 2 -vcodec libx264 -s {1} -crf 22 -threads 0 -b {3} -strict experimental -movflags +faststart {2}",
-                            inputFile, resolution, outputFile, videoBitRate, autodBitRate);
+                        //var arguments = String.Format("-i {0} -ab {4}k -ac 2 -vcodec libx264 -s {1} -crf 22 -threads 0 -b {3} -strict experimental -movflags +faststart {2}",
 
-                        Outpoot = RunProcess(FFmpegPath, arguments);
+                        var tmpPath = Path.GetTempFileName();
+                        var arguments = String.Format("-i {0} -ab {4}k -ac 2 -vcodec libx264 -s {1} -crf 22 -threads 0 -b {3} -strict experimental {2}", inputFile, resolution, tmpPath, videoBitRate, autodBitRate);
+
+                        Outpoot += ProcessManager.RunProcess(FFmpegPath, arguments);
+                        Outpoot += ProcessManager.RunProcess(QtFaststartPath, String.Format("{0} {1}", tmpPath, outputFile));
+
+                        File.Delete(tmpPath);
                     }
                 }
                 else if (format == Format.Ogg)
                 {
                     var arguments = String.Format("--videoquality 5 --audioquality 1 --max_size {0} {1}", resolution, inputFile);
 
-                    Outpoot = RunProcess(FFmpeg2TheoraPath, arguments);
+                    Outpoot = ProcessManager.RunProcess(FFmpeg2TheoraPath, arguments);
 
-                    var ogvTempFile = Path.GetDirectoryName(inputFile) + "\\" +
-                                      Path.GetFileNameWithoutExtension(inputFile) + ".ogv";
+                    var ogvTempFile = Path.GetDirectoryName(inputFile) + "\\" + Path.GetFileNameWithoutExtension(inputFile) + ".ogv";
 
                     File.Copy(ogvTempFile, outputFile);
                     File.Delete(ogvTempFile);
@@ -103,7 +97,7 @@ namespace X.Media.Encoding
                 else if (format == Format.Webm)
                 {
                     var arguments = String.Format("-i {0} -f webm -vcodec libvpx -acodec libvorbis -b {3} -r 25 -s {1} -ar 44100 -ab {4}k -ac 2 -y {2}", inputFile, resolution, outputFile, videoBitRate, autodBitRate);
-                    Outpoot = RunProcess(FFmpegPath, arguments);
+                    Outpoot = ProcessManager.RunProcess(FFmpegPath, arguments);
                 }
             }
             catch (Exception ex)
@@ -114,86 +108,12 @@ namespace X.Media.Encoding
             return File.Exists(outputFile);
         }
 
-        private static string RunProcess(string fileNmae, string arguments)
+        private static void CheckFile(string path, byte[] file)
         {
-            //create a process info
-            var processStartInfo = new ProcessStartInfo
+            if (!File.Exists(path))
             {
-                UseShellExecute = false,
-                CreateNoWindow = false,
-                RedirectStandardOutput = false,
-                RedirectStandardError = false,
-                FileName = fileNmae,
-                Arguments = arguments
-            };
-
-            //Create the output and streamreader to get the output
-            var output = new StringBuilder();
-
-            output.AppendFormat("Operation start at: {0} {1}\r\n", DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString());
-            output.AppendFormat("{0} {1}\r\n", fileNmae, arguments);
-
-            StreamReader outputStreamReader = null;
-
-            //try the process
-            try
-            {
-                //run the process
-                var process = new Process();
-                process.StartInfo = processStartInfo;
-
-                process.Start();
-
-                try
-                {
-                    if (!process.HasExited)
-                    {
-                        process.PriorityClass = ProcessPriorityClass.BelowNormal;
-                    }
-                    if (!process.HasExited)
-                    {
-                        process.ProcessorAffinity = (IntPtr)1;
-                    }
-
-                    process.WaitForExit();
-                }
-                catch (Exception ex)
-                {
-                    output.AppendLine(String.Format("Error: {0}", ex.Message));
-                }
-
-                if (processStartInfo.RedirectStandardOutput)
-                {
-                    //get the output
-                    outputStreamReader = process.StandardError;
-
-                    //now put it in a string
-                    output.AppendLine(outputStreamReader.ReadToEnd());
-                }
-
-                process.Close();
+                File.WriteAllBytes(path, file);
             }
-            catch (Exception ex)
-            {
-                output.AppendLine("\r\nError:");
-                output.AppendLine(ex.Message);
-                output.AppendLine("\r\n");
-            }
-            finally
-            {
-                //now, if we succeded, close out the streamreader
-                if (outputStreamReader != null)
-                {
-                    outputStreamReader.Close();
-                    outputStreamReader.Dispose();
-                }
-            }
-
-            output.AppendFormat("Operation end at: {0} {1}\r\n", DateTime.Now.ToLongDateString(), DateTime.Now.ToLongTimeString());
-            output.AppendLine("----------------------------------------------------------------------------------------------------------------");
-
-
-            return output.ToString();
         }
 
         public static string GetFormatExtension(Format format)

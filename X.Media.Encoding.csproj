@@ -40,6 +40,7 @@
   <ItemGroup>
     <Compile Include="Encoder.cs" />
     <Compile Include="Format.cs" />
+    <Compile Include="ProcessManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -51,102 +52,102 @@
     <Compile Include="QuickVideoEncodingCommands.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="qt-faststart.exe" />
-    <EmbeddedResource Include="ffmpeg.exe" />
-    <EmbeddedResource Include="ffmpeg2theora.exe" />
-    <EmbeddedResource Include="HandBrakeCLI.exe" />
-    <EmbeddedResource Include="avifil32.dll" />
-    <Content Include="licenses\ffmpeg\bzip2.txt">
+    <EmbeddedResource Include="lib\qt-faststart.exe" />
+    <EmbeddedResource Include="lib\ffmpeg.exe" />
+    <EmbeddedResource Include="lib\ffmpeg2theora.exe" />
+    <EmbeddedResource Include="lib\HandBrakeCLI.exe" />
+    <EmbeddedResource Include="lib\avifil32.dll" />
+    <Content Include="lib\licenses\ffmpeg\bzip2.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\fontconfig.txt">
+    <Content Include="lib\licenses\ffmpeg\fontconfig.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\freetype.txt">
+    <Content Include="lib\licenses\ffmpeg\freetype.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\frei0r.txt">
+    <Content Include="lib\licenses\ffmpeg\frei0r.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\gnutls.txt">
+    <Content Include="lib\licenses\ffmpeg\gnutls.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\lame.txt">
+    <Content Include="lib\licenses\ffmpeg\lame.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libass.txt">
+    <Content Include="lib\licenses\ffmpeg\libass.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libbluray.txt">
+    <Content Include="lib\licenses\ffmpeg\libbluray.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libcaca.txt">
+    <Content Include="lib\licenses\ffmpeg\libcaca.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libgsm.txt">
+    <Content Include="lib\licenses\ffmpeg\libgsm.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libiconv.txt">
+    <Content Include="lib\licenses\ffmpeg\libiconv.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libilbc.txt">
+    <Content Include="lib\licenses\ffmpeg\libilbc.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libmodplug.txt">
+    <Content Include="lib\licenses\ffmpeg\libmodplug.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libtheora.txt">
+    <Content Include="lib\licenses\ffmpeg\libtheora.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libvorbis.txt">
+    <Content Include="lib\licenses\ffmpeg\libvorbis.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\libvpx.txt">
+    <Content Include="lib\licenses\ffmpeg\libvpx.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\opencore-amr.txt">
+    <Content Include="lib\licenses\ffmpeg\opencore-amr.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\openjpeg.txt">
+    <Content Include="lib\licenses\ffmpeg\openjpeg.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\opus.txt">
+    <Content Include="lib\licenses\ffmpeg\opus.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\README.txt">
+    <Content Include="lib\licenses\ffmpeg\README.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\rtmpdump.txt">
+    <Content Include="lib\licenses\ffmpeg\rtmpdump.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\schroedinger.txt">
+    <Content Include="lib\licenses\ffmpeg\schroedinger.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\soxr.txt">
+    <Content Include="lib\licenses\ffmpeg\soxr.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\speex.txt">
+    <Content Include="lib\licenses\ffmpeg\speex.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\twolame.txt">
+    <Content Include="lib\licenses\ffmpeg\twolame.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\vo-aacenc.txt">
+    <Content Include="lib\licenses\ffmpeg\vo-aacenc.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\vo-amrwbenc.txt">
+    <Content Include="lib\licenses\ffmpeg\vo-amrwbenc.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\x264.txt">
+    <Content Include="lib\licenses\ffmpeg\x264.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\xavs.txt">
+    <Content Include="lib\licenses\ffmpeg\xavs.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\xvid.txt">
+    <Content Include="lib\licenses\ffmpeg\xvid.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="licenses\ffmpeg\zlib.txt">
+    <Content Include="lib\licenses\ffmpeg\zlib.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -155,22 +156,22 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="licenses\handbrake\AUTHORS">
+    <None Include="lib\licenses\handbrake\AUTHORS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="licenses\handbrake\COPYING">
+    <None Include="lib\licenses\handbrake\COPYING">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="licenses\handbrake\CREDITS">
+    <None Include="lib\licenses\handbrake\CREDITS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="licenses\handbrake\NEWS">
+    <None Include="lib\licenses\handbrake\NEWS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="licenses\handbrake\THANKS">
+    <None Include="lib\licenses\handbrake\THANKS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="licenses\handbrake\TRANSLATIONS">
+    <None Include="lib\licenses\handbrake\TRANSLATIONS">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
